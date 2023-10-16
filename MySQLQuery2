@@ -1,0 +1,23 @@
+/*
+Outputting the message count per user as the bucket and the number of Messanger users who fall into that bucket.
+*/
+WITH UserMessageCount AS
+(
+SELECT 
+  USER_ID, 
+  COUNT(TWEET_ID) AS MessageCountPerUser
+FROM TWEETS
+WHERE
+  TWEET_DATE BETWEEN '2022-01-01' AND '2022-12-31'
+GROUP BY 
+  USER_ID
+)
+SELECT
+  MessageCountPerUser AS MessageBucket,
+  COUNT(USER_ID) AS UserNumber
+FROM
+  UserMessageCount
+GROUP BY
+  MessageCountPerUser
+ORDER BY
+  COUNT(USER_ID) DESC
