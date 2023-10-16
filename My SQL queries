@@ -1,0 +1,34 @@
+/*Identifying  the top two highest-grossing 
+products within each category in the year 2022. 
+The output  includes the category, product, and total spend. 
+I use nested CTEs, window functions, extract function.
+*/
+WITH GROUPED_TRANSACTIONS AS
+(
+SELECT 
+  CATEGORY,
+  PRODUCT, 
+  SUM(SPEND) AS SUM_SPENT
+FROM
+  PRODUCT_SPEND
+WHERE
+  EXTRACT(YEAR FROM TRANSACTION_DATE)='2022'
+GROUP BY
+  1,2
+  ),
+RANKED_TRANS AS
+(
+SELECT 
+  *, 
+  RANK() OVER(PARTITION BY CATEGORY ORDER BY SUM_SPENT DESC ) 
+FROM
+  GROUPED_TRANSACTIONS
+)
+
+SELECT 
+  CATEGORY,
+  PRODUCT,
+  SUM_SPENT
+FROM RANKED_TRANS
+WHERE
+RANK <3
