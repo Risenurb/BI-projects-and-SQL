@@ -1,0 +1,21 @@
+/*
+obtaining the third transaction of every user using CTE and window function
+*/
+WITH OrderedTransactionsByDate AS
+(
+SELECT 
+  user_id,
+  spend,
+  transaction_date,
+  ROW_NUMBER() OVER(PARTITION BY user_id ORDER BY transaction_date)
+FROM
+  transactions 
+  )
+SELECT 
+   user_id,
+  spend,
+  transaction_date
+FROM
+  OrderedTransactionsByDate
+WHERE
+  row_number =3
