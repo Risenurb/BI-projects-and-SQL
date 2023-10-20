@@ -1,0 +1,28 @@
+WITH GroupedSpend AS(
+SELECT 
+  EXTRACT(YEAR FROM transaction_date) AS transaction_year,
+  product_id,
+  SUM(spend) AS CurrentYearSpend
+FROM
+  user_transactions
+GROUP BY
+  product_id,
+  EXTRACT(YEAR FROM transaction_date) 
+ORDER BY
+  product_id,
+  transaction_year ASC
+ ),
+ CurrentPrevYearSpend
+ AS
+ (
+ SELECT 
+  *,
+  LAG(CurrentYearSpend) OVER(PARTITION BY product_id ) as PrevYearSpend
+FROM
+  GroupedSpend
+  )
+SELECT
+  *,
+ ROUND(((currentyearspend-PrevYearSpend)/PrevYearSpend)*100,2) AS YoYChange
+FROM
+  CurrentPrevYearSpend
