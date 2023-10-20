@@ -1,3 +1,6 @@
+/*
+calculated the year-on-year growth rate for the total spend of each product, grouping the results by product ID.
+*/
 WITH GroupedSpend AS(
 SELECT 
   EXTRACT(YEAR FROM transaction_date) AS transaction_year,
