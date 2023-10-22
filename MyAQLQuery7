@@ -1,0 +1,24 @@
+/*
+A query to obtain a breakdown of the time spent sending vs. opening messages as a percentage of total time spent on these activities grouped by age group. Rounde the percentage to 2 decimal places in the output.
+*/
+WITH ActivityAgeJoined AS
+(
+SELECT
+  * 
+FROM
+  Activities
+JOIN
+ age_breakdown using(user_id)
+WHERE
+  activity_type in('open','send')
+)
+
+SELECT 
+  age_bucket,
+  ROUND((100*SUM(time_spent) FILTER(WHERE activity_type ='send'))/SUM(time_spent),2) as SendPerc,
+  ROUND((100*SUM(time_spent) FILTER(WHERE activity_type ='open'))/SUM(time_spent),2) as OpenPerc
+ 
+FROM
+  ActivityAgeJoined
+GROUP BY
+  age_bucket
