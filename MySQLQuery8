@@ -1,0 +1,26 @@
+/*
+Calculated each user's average session time.A session is defined as the time difference between a page_load and page_exit
+*/
+WITH SessionDuration_cte AS
+(
+select 
+    f1.user_id,
+    f1.timestamp::date as date,
+     min(f2.timestamp::TIMESTAMP) -max(f1.timestamp::TIMESTAMP) as SessionDuration
+from facebook_web_log f1
+join facebook_web_log f2 on 
+    f1.user_id=f2.user_id
+where
+    f1.action='page_load'
+and
+    f2.action='page_exit'
+and f2.timestamp > f1.timestamp
+group by 1,2
+    )
+select 
+    user_id,
+    avg(SessionDuration)
+from
+    SessionDuration_cte 
+group by 
+    user_id
