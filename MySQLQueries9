@@ -1,0 +1,20 @@
+/*
+Find the email activity rank for each user.
+*/
+WITH CountOfEmailsSent_CTE AS
+(
+select 
+    from_user,
+    count(*) as CountOfEmailsSent
+from 
+    google_gmail_emails
+group by
+    from_user
+order by 
+    CountOfEmailsSent desc,from_user
+    )
+Select 
+    *,
+    row_number() over(order by countofemailssent desc) as ranking
+from
+    CountOfEmailsSent_CTE
