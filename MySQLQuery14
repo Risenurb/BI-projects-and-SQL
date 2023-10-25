@@ -1,0 +1,19 @@
+/*
+Ranked guests based on the number of messages they've exchanged with the hosts. Guests with the same number of messages as other guests  have the same rank. Did not skip rankings if the preceding rankings are identical.
+ Ordered by the highest number of total messages first.
+*/
+WITH sum_mess_cte as
+(
+select 
+    id_guest,
+    sum(n_messages) as sum_messsages
+from airbnb_contacts
+group by 1
+order by 2 desc
+    )
+select 
+    id_guest,
+    sum_messsages,
+    dense_rank() over( order by sum_messsages desc) as ranking
+from 
+  sum_mess_cte  
