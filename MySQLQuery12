@@ -1,0 +1,37 @@
+/*
+finding overall friend acceptance rate by date.
+*/
+WITH sent_cte as 
+(
+select 
+    user_id_sender,
+    user_id_receiver,
+    date
+from 
+    fb_friend_requests
+where
+    action ='sent'
+
+),
+accepted_cte as
+(
+select 
+    user_id_sender,
+    user_id_receiver,
+    date
+from 
+    fb_friend_requests
+where
+    action ='accepted'
+)
+select 
+    a.date,
+    count(b.user_id_receiver)/cast(count(a.user_id_sender) as decimal )as rate
+from
+   sent_cte a
+left join accepted_cte b
+on
+    a.user_id_sender=b.user_id_sender
+    and a.user_id_receiver=b.user_id_receiver
+group by
+    1
