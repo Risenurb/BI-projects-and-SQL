@@ -1,0 +1,19 @@
+/*
+Finding popularity percentage for each user on Meta/Facebook. 
+*/
+WITH all_users_cte AS
+(
+SELECT user1,
+          user2
+   FROM facebook_friends
+   UNION SELECT user2 AS user1,
+                user1 AS user2
+   FROM facebook_friends
+   )
+SELECT 
+    user1,
+    (count(*)::float/( SELECT count(distinct user1) FROM all_users_cte))*100 as popularity_percentage
+FROM
+    all_users_cte
+GROUP BY 1
+ORDER BY 1
