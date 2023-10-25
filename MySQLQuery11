@@ -1,0 +1,18 @@
+/*
+Calculated the month-over-month percentage change in revenue. 
+The output  includes the year-month date (YYYY-MM) and percentage change, rounded to the 2nd decimal point, and sorted from the beginning of the year to the end of the year.
+*/
+WITH sorted_date AS
+(
+select 
+    to_char(created_at::date,'YYYY-MM') as date,
+    value
+from sf_transactions
+order by 1 
+)
+select 
+    date,
+     ROUND((SUM(value) - LAG(SUM(value)) OVER(ORDER BY date)) / LAG(SUM(value)) OVER(ORDER BY date) * 100, 2) AS revenue_diff
+from 
+    sorted_date
+group by 1
