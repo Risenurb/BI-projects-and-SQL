@@ -1,0 +1,14 @@
+/*
+Finding matching hosts and guests in a way that they are both of the same gender and nationality
+*/
+select 
+    airbnb_hosts.host_id,
+    airbnb_guests.guest_id
+from 
+    airbnb_hosts
+inner join 
+    airbnb_guests
+on
+  airbnb_hosts.nationality=airbnb_guests.nationality 
+ where airbnb_guests.gender = airbnb_hosts.gender
+ group by 1,2;
