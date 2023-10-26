@@ -1,0 +1,16 @@
+/*
+The number of Apple product users and the number of total users with a device and group the counts by language.
+*/
+select 
+    playbook_users.language,
+    count( distinct case 
+            when playbook_events.device in ('macbook pro','iphone 5s','ipad air')   then playbook_users.user_id else null end ) as Apple_users ,
+    count(distinct playbook_users.user_id) as total_user
+ from playbook_users 
+ inner join playbook_events
+ on 
+ playbook_users.user_id=playbook_events.user_id
+ group by 
+    playbook_users.language
+ order by 
+    total_user desc
