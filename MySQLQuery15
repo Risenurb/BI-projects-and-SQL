@@ -1,0 +1,18 @@
+/*
+Number Of Units Per Nationality
+*/
+select 
+    airbnb_hosts.nationality ,
+    count(distinct airbnb_units.unit_id) as number_of_apartments
+from 
+    airbnb_units
+left join 
+    airbnb_hosts
+on 
+airbnb_units.host_id=airbnb_hosts.host_id
+where
+    airbnb_units.unit_type='Apartment'
+and
+    airbnb_hosts.age <30
+group by 1
+order by 2 desc
