@@ -1,0 +1,22 @@
+/*
+Calculated the percentage of spam posts in all viewed posts by day.
+*/
+WITH joinedposts_cte AS 
+(
+select * 
+from 
+    facebook_posts
+left join 
+    facebook_post_views
+using(post_id)
+    --facebook_posts.post_id=facebook_post_views.post_id
+where
+    facebook_post_views.viewer_id is not  null
+    )
+
+select 
+    post_date::date,
+    (round(count(*) filter(where post_keywords='[#spam#]'),2)/count(*))*100 as spam_perc
+from 
+    joinedposts_cte
+group by 1
