@@ -1,0 +1,20 @@
+/*
+Finding the percentage of shipable orders.
+Considering an order is shipable if the customer's address is known.
+*/
+WITH joined_order_customer_cte AS
+(
+select 
+orders.id,
+customers.address
+from 
+    orders
+left join 
+    customers
+on
+    orders.cust_id=customers.id
+    )
+select 
+    round(100*count(id) filter(where address is not null),2)/count(id) as percentage
+from 
+    joined_order_customer_cte
