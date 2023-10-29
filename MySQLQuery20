@@ -1,0 +1,28 @@
+/*
+Finding the date with the highest total energy consumption from the Meta/Facebook data centers. Output the date along with the total energy consumption across all data centers.
+*/
+WITH unionall_cte as
+(
+select * from fb_eu_energy
+union all 
+select 
+    * from fb_asia_energy
+union all
+select 
+    * from fb_na_energy
+),
+ordered_consumption_cte as
+(
+select 
+    date,
+    sum(consumption) as max_energy_cons 
+from unionall_cte
+group by 1
+order by 2 desc)
+
+select 
+*
+from
+   ordered_consumption_cte 
+where
+    max_energy_cons =(select max(max_energy_cons) from ordered_consumption_cte)
