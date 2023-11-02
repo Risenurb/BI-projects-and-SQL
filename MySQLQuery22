@@ -1,0 +1,22 @@
+/*
+Find the second highest salary of employees
+*/
+
+WITH ranked_salary_cte as
+(
+select
+    id,
+    salary,
+    row_number() over() as ranking
+from employee
+group by 
+    1,2
+order by 2 desc
+)
+
+select 
+    salary
+from
+    ranked_salary_cte
+where
+    ranking=2
