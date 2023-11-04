@@ -1,0 +1,10 @@
+/*
+Make a report showing the number of survivors and non-survivors by passenger class
+*/
+select 
+    survived,
+    count(*) filter( where pclass=1) as first_class,
+    count(*) filter( where pclass=2) as first_class,
+    count(*) filter( where pclass=3) as first_class
+from titanic
+group by 1;
